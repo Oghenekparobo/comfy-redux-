@@ -13,3 +13,6 @@ export { default as PaginationContainer } from "./PaginationContainer";
 export { default as Filters } from "./Filters";
 export { default as FormSelect } from "./FormSelect";
 export { default as FormRange } from "./FormRange";
+export { default as CartTotals } from "./CartTotals";
+export { default as CartItemList } from "./CartItemList";
+export { default as CartItem } from "./CartItem";

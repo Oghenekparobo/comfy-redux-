@@ -3,33 +3,18 @@ import { BsCart3, BsMoonFill, BsSunFill } from "react-icons/bs";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import Navlinks from "./Navlinks";
-
-const themes = {
-  retro: "retro",
-  acid: "acid",
-};
-
-const getThemeFromLocalStorage = ()=>{
-    return localStorage.getItem('theme') || themes.retro
-}
+import { useDispatch, useSelector } from "react-redux";
+import { themeToggle } from "../features/user/UserSlice";
 
 const Navbar = () => {
-  const [theme, setTheme] = useState(getThemeFromLocalStorage());
+  const dispatch = useDispatch();
 
   const handleTheme = () => {
-    const { retro, acid } = themes;
-
-    const newTheme = theme === acid ? retro : acid;
-
-    setTheme(newTheme);
+    dispatch(themeToggle());
   };
 
- 
+  const numItemsInCart = useSelector((state) => state.cartState.numItemsInCart);
 
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
   return (
     <nav className="bg-base-100">
       <div className="navbar align-element">
@@ -73,7 +58,7 @@ const Navbar = () => {
             <div className="indicator">
               <BsCart3 className="h-6 w-6" />
               <span className="badge badge-sm badge-primary indicator-item">
-                8
+                {numItemsInCart}
               </span>
             </div>
           </NavLink>

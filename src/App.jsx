@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import {
   About,
@@ -17,12 +17,19 @@ import { ErrorElement } from "./components";
 import { loader as landingLoader } from "./pages/Landing";
 import { loader as singleProductLoader } from "./pages/SingleProduct";
 import { loader as productsLoader } from "./pages/Products";
+import Loading from "./components/Loading";
+
+const HomeLoader = React.lazy(() => import("./pages/HomeLayout"));
 
 const App = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <HomeLayout />,
+      element: (
+        <Suspense fallback={<Loading />}>
+          <HomeLoader />
+        </Suspense>
+      ),
       errorElement: <Error />,
       children: [
         {

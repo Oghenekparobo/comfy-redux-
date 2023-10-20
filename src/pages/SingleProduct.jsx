@@ -1,19 +1,40 @@
 import React, { useState } from "react";
 import { customFetch, formatPrice, generateAmountOptions } from "../utils";
 import { Link, useLoaderData } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addItem } from "../features/cart/Cartslice";
 
 const SingleProduct = () => {
   const { product } = useLoaderData();
+
   const { image, title, price, description, colors, company } =
     product.attributes;
 
   const [productColor, setProductColor] = useState(colors[0]);
   const [amount, setAmount] = useState(1);
 
+  const dispatch = useDispatch();
+
   const handleAmount = (e) => {
     setAmount(parseInt(e.target.value));
-
   };
+
+  const cartProduct = {
+    cartID: product.id + productColor,
+    productID: product.id,
+    image,
+    title,
+    price,
+    description,
+    productColor,
+    company,
+    amount,
+  };
+
+
+  const addToCart = ()=>{ 
+    dispatch(addItem({product: cartProduct}))
+  }
 
   return (
     <section>
@@ -59,7 +80,8 @@ const SingleProduct = () => {
                     key={color}
                     type="button"
                     className={`badge w-6 h-6 mr-2 ${
-                      color === productColor && "border-2 border-secondary"
+                      color === productColor &&
+                      "border-2 border-secondary rounded-full"
                     }`}
                     style={{ backgroundColor: color }}
                     onClick={() => setProductColor(color)}
@@ -88,7 +110,7 @@ const SingleProduct = () => {
           <div className="mt-10">
             <button
               className="btn btn-secondary capitalize"
-              onClick={() => console.log("add to bag")}
+              onClick={addToCart}
             >
               add to bag
             </button>
