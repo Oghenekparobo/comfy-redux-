@@ -1,6 +1,8 @@
 import React from "react";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, redirect } from "react-router-dom";
 import { FormInput, SubmitBtn } from "../components";
+import { customFetch } from "../utils";
+import { toast } from "react-toastify";
 
 const Register = () => {
   return (
@@ -19,7 +21,7 @@ const Register = () => {
           <SubmitBtn text="register" />
 
           <p className="text-center capitalize">
-            already member?  {""}
+            already member? {""}
             <Link
               to="/login"
               className="link link-hover link-primary capitalize"
@@ -31,6 +33,24 @@ const Register = () => {
       </Form>
     </section>
   );
+};
+
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  console.log(data);
+
+  try {
+    const response = await customFetch.post("/auth/local/register", data);
+    toast.success("account created succesfully");
+    return redirect("/login");
+  } catch (error) {
+    const errorMessage =
+      error?.response?.data?.error?.message ||
+      "please double check your credentials";
+    toast.error(errorMessage);
+    return null;
+  }
 };
 
 export default Register;

@@ -1,11 +1,11 @@
 import React, { Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { store } from "../store.jsx";
 import {
   About,
   Cart,
   Checkout,
   Error,
-  HomeLayout,
   Landing,
   Login,
   Orders,
@@ -18,6 +18,8 @@ import { loader as landingLoader } from "./pages/Landing";
 import { loader as singleProductLoader } from "./pages/SingleProduct";
 import { loader as productsLoader } from "./pages/Products";
 import Loading from "./components/Loading";
+import { action as registerAction } from "./pages/Register";
+import { action as loginAction } from "./pages/Login";
 
 const HomeLoader = React.lazy(() => import("./pages/HomeLayout"));
 
@@ -67,8 +69,18 @@ const App = () => {
         },
       ],
     },
-    { path: "/login", element: <Login />, errorElement: <Error /> },
-    { path: "/register", element: <Register />, errorElement: <Error /> },
+    {
+      path: "/login",
+      element: <Login />,
+      errorElement: <Error />,
+      action: loginAction(store),
+    },
+    {
+      path: "/register",
+      element: <Register />,
+      errorElement: <Error />,
+      action: registerAction,
+    },
   ]);
   return <RouterProvider router={router} />;
 };
