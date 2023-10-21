@@ -2,6 +2,13 @@ import React from "react";
 import { FeaturedProducts, Hero } from "../components";
 import { customFetch } from "../utils";
 
+const url = "/products?featured=true";
+
+const featuredProductsQuery = {
+  queryKey: ['featuredProducts'],
+  queryFn: () => customFetch(url),
+};
+
 const Landing = () => {
   return (
     <section className="py-24">
@@ -13,10 +20,10 @@ const Landing = () => {
   );
 };
 
-export const loader = async () => {
-  const url = "/products?featured=true";
+export const loader = (queryClient) => async () => {
+  console.log(queryClient);
 
-  const response = await customFetch(url);
+  const response = await queryClient.ensureQueryData(featuredProductsQuery);
 
   const products = response.data?.data;
   console.log(products);

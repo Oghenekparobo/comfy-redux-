@@ -21,14 +21,14 @@ const cartSlice = createSlice({
     addItem: (state, action) => {
       //   console.log(action.payload);
       const { product } = action.payload;
-      console.log(product);
+      // console.log(product);
       const item = state.cartItems.find((i) => i.cartID === product.cartID);
       if (item) {
         item.amount += product.amount;
       } else {
         state.cartItems.push(product);
       }
-      console.log(product.amount);
+      // console.log(product.amount);
       state.numItemsInCart += product.amount;
       state.cartTotal += product.price * product.amount;
 

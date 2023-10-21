@@ -3,16 +3,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { clearCart } from "../features/cart/Cartslice";
 import { logoutUser } from "../features/user/UserSlice";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userState.user);
 
+  const queryClient = useQueryClient();
+
   const handleLogout = () => {
     navigate("/");
     dispatch(clearCart());
     dispatch(logoutUser());
+    queryClient.removeQueries();
   };
   return (
     <div className="bg-neutral py-2 text-neutral-content ">
@@ -21,7 +25,10 @@ const Header = () => {
         {user ? (
           <div className="flex items-center gap-8 sm:gap-x-8">
             <p className="text-x sm:text-sm">hello {user.username}</p>
-            <button className="btn btn-xs btn-secondary btn-outline" onClick={handleLogout}>
+            <button
+              className="btn btn-xs btn-secondary btn-outline"
+              onClick={handleLogout}
+            >
               logout
             </button>
           </div>
