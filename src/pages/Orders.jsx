@@ -43,44 +43,38 @@ const Orders = () => {
   );
 };
 
+
 export const loader =
-  (store) =>
+  (store, queryClient) =>
   async ({ request }) => {
     const user = store.getState().userState.user;
 
     if (!user) {
-      toast.warn("You must be logged in to view orders");
-      return redirect("/login");
+      toast.warn('You must be logged in to view orders');
+      return redirect('/login');
     }
-
-    console.log("hello");
-
     const params = Object.fromEntries([
       ...new URL(request.url).searchParams.entries(),
     ]);
-
     try {
-      const response = await customFetch.get("/orders", {
-        params,
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const response = await queryClient.ensureQueryData(
+        ordersQuery(params, user)
+      );
 
-      return { orders: response.data?.data, meta: response.data?.meta };
+      return {
+        orders: response.data.data,
+        meta: response.data.meta,
+      };
     } catch (error) {
       console.log(error);
       const errorMessage =
         error?.response?.data?.error?.message ||
-        "there was an error accessing your orders";
+        'there was an error accessing your orders';
 
       toast.error(errorMessage);
-      if (error?.response?.status === 401 || 403) return redirect("/login");
-
+      if (error?.response?.status === 401 || 403) return redirect('/login');
       return null;
     }
-
-    return null;
   };
 
 export default Orders;

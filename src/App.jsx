@@ -36,67 +36,72 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const router = createBrowserRouter([
+  const router = createBrowserRouter(
+    [
+      {
+        path: "/",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <HomeLoader />
+          </Suspense>
+        ),
+        errorElement: <Error />,
+        children: [
+          {
+            index: true,
+            element: <Landing />,
+            errorElement: <ErrorElement />,
+            loader: landingLoader(queryClient),
+          },
+          {
+            path: "about",
+            element: <About />,
+          },
+          {
+            path: "products",
+            element: <Products />,
+            loader: productsLoader(queryClient),
+          },
+          {
+            path: "product/:id",
+            element: <SingleProduct />,
+            errorElement: <ErrorElement />,
+            loader: singleProductLoader(queryClient),
+          },
+          {
+            path: "cart",
+            element: <Cart />,
+          },
+          {
+            path: "checkout",
+            element: <CheckoutComp />,
+            loader: checkoutLoader(store, queryClient),
+            action: loaderAction(store , queryClient),
+          },
+          {
+            path: "orders",
+            element: <Orders />,
+            loader: ordersLoader(store, queryClient),
+          },
+        ],
+      },
+      {
+        path: "/login",
+        element: <Login />,
+        errorElement: <Error />,
+        action: loginAction(store),
+      },
+      {
+        path: "/register",
+        element: <Register />,
+        errorElement: <Error />,
+        action: registerAction,
+      },
+    ],
     {
-      path: "/",
-      element: (
-        <Suspense fallback={<Loading />}>
-          <HomeLoader />
-        </Suspense>
-      ),
-      errorElement: <Error />,
-      children: [
-        {
-          index: true,
-          element: <Landing />,
-          errorElement: <ErrorElement />,
-          loader: landingLoader(queryClient),
-        },
-        {
-          path: "about",
-          element: <About />,
-        },
-        {
-          path: "products",
-          element: <Products />,
-          loader: productsLoader(queryClient),
-        },
-        {
-          path: "product/:id",
-          element: <SingleProduct />,
-          errorElement: <ErrorElement />,
-          loader: singleProductLoader(queryClient),
-        },
-        {
-          path: "cart",
-          element: <Cart />,
-        },
-        {
-          path: "checkout",
-          element: <CheckoutComp />,
-          loader: checkoutLoader(store , queryClient),
-          action: loaderAction(store),
-        },
-        {
-          path: "orders",
-          element: <Orders />,
-          loader: ordersLoader(store , queryClient),
-        },
-      ],
-    },
-    {
-      path: "/login",
-      element: <Login />,
-      errorElement: <Error />,
-      action: loginAction(store),
-    },
-    {
-      path: "/register",
-      element: <Register />,
-      errorElement: <Error />,
-      action: registerAction,
-    },
-  ]);
+      basename: "/dist",
+    }
+  );
   return (
     <>
       <QueryClientProvider client={queryClient}>
